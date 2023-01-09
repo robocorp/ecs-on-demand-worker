@@ -1,0 +1,34 @@
+{
+  "name": "rc-ecs-ondemand-worker-provisioner",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run test:types && npm run test:format",
+    "lint": "eslint --ext .js,.ts src/**",
+    "format": "npm run prettier:fix",
+    "prettier": "prettier src/",
+    "prettier:check": "npm run prettier -- --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "test:format": "npm run prettier:check",
+    "test:types": "tsc --noEmit"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.109",
+    "@types/node": "^18.11.18",
+    "esbuild": "^0.16.16",
+    "prettier": "^2.8.2",
+    "serverless": "^3.26.0",
+    "serverless-esbuild": "^1.37.0",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ecs": "^3.245.0",
+    "@aws-sdk/client-secrets-manager": "^3.245.0",
+    "@aws-sdk/client-ssm": "^3.245.0",
+    "@aws-sdk/client-sts": "^3.245.0",
+    "@aws-sdk/util-arn-parser": "^3.208.0",
+    "zod": "^3.20.2"
+  }
+}

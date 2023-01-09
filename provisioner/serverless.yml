@@ -1,0 +1,59 @@
+# Robocorp On-Demand Worker Provisioner
+service: rc-odw-prov
+
+frameworkVersion: '3'
+configValidationMode: error
+
+plugins:
+  - serverless-esbuild
+
+custom:
+  esbuild:
+    concurrency: 1
+    exclude:
+      - '@aws-sdk/*' # lambda nodejs18.x includes aws-sdk v3
+
+provider:
+  name: aws
+  stage: dev
+  # default region
+  region: us-east-1
+  deploymentMethod: direct
+  runtime: nodejs18.x
+  timeout: 20
+  logRetentionInDays: 30
+  versionFunctions: false
+  deploymentBucket:
+    versioning: true
+    serverSideEncryption: AES256
+    blockPublicAccess: true
+  environment:
+    ODW_ID: rc-odw-1
+    ECR_IMAGE_TAG: v3
+    WORKER_PROVIDER_CONFIGURATION_SECRET: ${self:provider.environment.ODW_ID}-config
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: secretsmanager:GetSecretValue
+          Resource: arn:aws:secretsmanager:${aws:region}:${aws:accountId}:secret:${self:provider.environment.WORKER_PROVIDER_CONFIGURATION_SECRET}-*
+        - Effect: Allow
+          Action: ssm:GetParameter
+          Resource: arn:aws:ssm:${aws:region}:${aws:accountId}:parameter/${self:provider.environment.ODW_ID}-*
+          # Rest of the statements are subject to removal once
+          # AssumeRole logic is implemented in the provisioner
+        - Effect: Allow
+          Action: ecs:*
+          Resource: '*'
+        - Effect: Allow
+          Action: iam:PassRole
+          Resource: '*'
+
+functions:
+  requestHandler:
+    handler: src/handler.handler
+    events:
+      - httpApi:
+          path: /worker-request
+          method: post

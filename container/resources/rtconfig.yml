@@ -1,0 +1,44 @@
+#
+# Worker configuration for cloud containers.
+#
+# Difference to the default is this allows any commands to be run, which
+# is OK in an isolated container.
+#
+
+run:
+  #
+  # Specify commands allowed to be executed as "command only" bots.
+  #
+  # Incoming commands are matched against allowed commands list using micromatch:
+  #  - micromatch.isMatch(requestedCommand, allowedCommandsArray)
+  #  - See https://www.npmjs.com/package/micromatch#ismatch for reference
+  #
+  # Recommendation: Apply principle of least privilege. Use exact match
+  # with a single command when use case allows.
+  #
+  allowedCommands:
+    - '**'
+
+dataTransfer:
+  # Specify what data is allowed to be sent to the cloud from the executed process.
+  #
+  # When data transfer is enabled, the data including build artifacts, app console log and console output
+  # are sent to the cloud.
+  #
+  # If disabled, only the operationally mandatory control messages between cloud and app are sent to the cloud,
+  # and will be printed in the cloud run console output window.
+  #
+  # To disable data transfer, set option 'disable: true'.
+  #
+  disable: false
+
+  # Specify if desktop video is allowed to be streamed to the Control Room.
+  #
+  # When video stream is enabled, the desktop video can be streamed to the Control Room if option is enabled
+  # in the Control Room step configuration.
+  #
+  # If disabled, this instance will never stream the desktop video to the Control Room, even if the option is enabled
+  # from Control Room.
+  #
+  # To enable the video stream, set option 'videoStreamEnabled: true'.
+  videoStreamEnabled: false
