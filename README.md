@@ -68,4 +68,11 @@ as AWS Lambda functions behind AWS API Gateway.
 
 ### Configure the provisioner in Control Room
 
-TBD
+Final step is to configure the setup in Control Room.
+
+ 1. Log in and navigate to Workers page of the workspace where the bots are located
+ 1. Click "Add" in the "Self-hosted On-demand Workers" list
+     - `Name`: Enter a descriptive name
+     - `URL`: copy-paste URL from the provisioner setup step above
+     - `Secret`: secret has been generated and set up with the Terraform project setup. Open AWS secrets manager on the region where the project is deployed and retrieve value of the `secret` key in `rc-odw-1-config`.
+1. The self-hosted worker can now be selected in Step configuration.
