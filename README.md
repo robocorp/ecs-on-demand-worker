@@ -18,7 +18,8 @@ If you want to keep up to date with updates to this repository easily, it is rec
 ### Prerequisites
 
  1. Robocorp Control Room organization with On-Demand Workers enabled. This feature is part of the Enterprise tier, or may otherwise be activated by Robocorp staff.
- 1. Computer with [Terraform](https://www.terraform.io) v1.3+ and [Docker Desktop](https://docker.com) installed. The scripts in this repository will work as-is on MacOS and Linux, but can be easily adapted for Windows.
+ 1. Computer with [Terraform](https://www.terraform.io) v1.3+ and [Docker Desktop](https://docker.com) installed.
+ The scripts in this repository will work as-is on MacOS and Linux, but can be easily adapted for Windows. Additional instructions for specific operating systems: [Amazon Linux 2](#amazon-linux-2)
  1. AWS Account with administrative privileges. We recommended reserving a dedicated AWS account for this
  workload within your AWS Organization according to AWS Best Practices.
  1. Basic knowledge of above mentioned tooling, AWS infrastructure and Robocorp technology stack.
@@ -63,7 +64,7 @@ as AWS Lambda functions behind AWS API Gateway.
      - edit `ECR_IMAGE_TAG` environment variable in `serverless.yaml`
  1. Deploy the provisioner application.
      - `npm ci`
-     - `sls deploy`
+     - `npm run deploy`
  1. Record the URL of the `worker-request` endpoint; it will be needed when configuring Control Room.
 
 ### Configure the provisioner in Control Room
@@ -76,3 +77,23 @@ Final step is to configure the setup in Control Room.
      - `URL`: copy-paste URL from the provisioner setup step above
      - `Secret`: secret has been generated and set up with the Terraform project setup. Open AWS secrets manager on the region where the project is deployed and retrieve value of the `secret` key in `rc-odw-1-config`.
 1. The self-hosted worker can now be selected in Step configuration.
+
+
+# Appendix
+
+## Platform/distribution specific instructions
+
+### Amazon Linux 2
+
+NodeJS for setting up the provisioner must be installed separately on AWS Linux 2.
+[AWS guide](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html) instructs using [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm), which is a good choice.
+ 1. Follow the official NVM [installation instructions](https://github.com/nvm-sh/nvm#install--update-script)
+ 1. Close and reopen the terminal to apply the added configuration
+ 1. Make sure `nvm` is found
+    - `nvm version`
+    - If you get error `nvm not found`, try to activate it manually: `. ~/.nvm/nvm.sh`
+ 1. Install NodeJS v16 (AWS Linux 2 does not yet support v18):
+    - `nvm install 16`
+ 1. Verify that npm is installed
+    - `node --version`
+ 1. Proceed with provisioner setup as described above
