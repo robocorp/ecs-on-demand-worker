@@ -8,7 +8,7 @@ ENV LANG=C.UTF-8 LANGUAGE=C.UTF-8 LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive
 
 # Install updates and dependencies.
 # Can be amended to include anything your bots need.
-RUN apt-get update && apt-get upgrade && \
+RUN apt-get update && apt-get -y upgrade && \
   # wget needed during container build
   apt-get -y install wget && \
   # These dependencies are part of the standard Robocorp container.
