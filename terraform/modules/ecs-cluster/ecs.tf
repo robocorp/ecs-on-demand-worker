@@ -81,6 +81,12 @@ resource "aws_autoscaling_group" "ecs_asg" {
     value = var.id
     propagate_at_launch = true
   }
+
+  tag {
+    key = "AmazonECSManaged"
+    value = true
+    propagate_at_launch = true
+  }
 }
 
 resource "aws_ecs_capacity_provider" "ecs_asg_provider" {
