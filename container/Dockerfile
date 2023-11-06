@@ -7,6 +7,7 @@ ENV LANG=C.UTF-8 LANGUAGE=C.UTF-8 LC_ALL=C.UTF-8
 # depends on this library and it wasn't available in the base container
 
 RUN apt-get update --fix-missing \
+    && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
         wget \
         bzip2 \
