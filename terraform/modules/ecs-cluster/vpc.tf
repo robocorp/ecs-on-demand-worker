@@ -49,8 +49,9 @@ resource "aws_subnet" "public_subnets" {
 }
 
 resource "aws_eip" "nat" {
-  vpc   = true
   count = length(aws_subnet.public_subnets)
+
+  domain = "vpc"
 
   tags = {
     Name = "${var.id}-nat-${data.aws_availability_zones.azs.names[count.index]}"
