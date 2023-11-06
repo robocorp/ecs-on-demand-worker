@@ -46,11 +46,11 @@ Dockerfile contains an environment suitables for web automation.
 
  1. Build the docker container image
     - `cd container`
-    - `docker build .`
+    - `docker build --platform linux/amd64 .`
  1. Upload the image to an image repository. To use the default repository set up by
 Terraform above, run the following:
-    - `./upload.sh <sha_from_build_output> v1.0`, where `v1.0` is the image tag name.
-        - You can choose any tagging scheme, but the provisioner in this example uses image tag v1.0 by default.
+    - `./upload.sh <sha_from_build_output> v2.0`, where `v2.0` is the image tag name.
+        - You can choose any tagging scheme, but the provisioner in this example uses image tag v2.0 by default.
 
 ### Provisioner
 
@@ -60,7 +60,7 @@ as AWS Lambda functions behind AWS API Gateway.
 
  1. Change working directory to the `provisioner` folder
      - `cd provisioner`
- 1. If you used something else than `v1.0` as the image tag name, configure the provisioner to use the tag given above.
+ 1. If you used something else than `v2.0` as the image tag name, configure the provisioner to use the tag given above.
      - edit `ECR_IMAGE_TAG` environment variable in `serverless.yaml`
  1. Deploy the provisioner application.
      - `npm ci`

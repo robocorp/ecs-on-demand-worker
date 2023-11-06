@@ -29,7 +29,7 @@ provider:
     blockPublicAccess: true
   environment:
     ODW_ID: rc-odw-1
-    ECR_IMAGE_TAG: v1.0
+    ECR_IMAGE_TAG: v2.0
     WORKER_PROVIDER_CONFIGURATION_SECRET: ${self:provider.environment.ODW_ID}-config
 
   iam:
