@@ -56,14 +56,8 @@ RUN /home/worker/bin/robocorp-worker init --log-level TRACE --rcc-exec-path /hom
 
 # OPTIONAL: Prebuild common environment(s) into the container image
 # This will increase the image size, but the environments prebuilt will be ready-to-go for robot executions.
-#
-# The included example is from https://github.com/robocorp/example-google-image-search/blob/main/conda.yaml,
-# feel free to add your own
-COPY ./resources/example-google-image-search.conda.yaml prebuilt-envs/example-google-image-search.conda.yaml
-RUN /home/worker/bin/rcc ht vars prebuilt-envs/example-google-image-search.conda.yaml --space workforce --controller agent.core.container --timeline \
-    && rm -rf /home/worker/.robocorp/pipcache \
-    && rm -rf /home/worker/.robocorp/pkgs \
-    && rm -rf /home/worker/.robocorp/holotree/v*h
+COPY ./resources/prebuilt-envs/* prebuilt-envs/
+RUN cd prebuilt-envs && ./build.sh
 
 # Set the local scripts in place
 COPY ./resources/start.sh start.sh
