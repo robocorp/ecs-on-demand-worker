@@ -13,7 +13,10 @@ export enum HmacErrorType {
 }
 
 export class HmacError extends Error {
-  constructor(message: string, public type: HmacErrorType) {
+  constructor(
+    message: string,
+    public type: HmacErrorType,
+  ) {
     super(message);
   }
 }
