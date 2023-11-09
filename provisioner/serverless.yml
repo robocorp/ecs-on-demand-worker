@@ -57,3 +57,12 @@ functions:
       - httpApi:
           path: /worker-request
           method: post
+
+  eventBridgeHandler:
+    handler: src/handler.eventBridgeHandler
+    events:
+      - eventBridge:
+          eventBus: ${ssm:${self:provider.environment.ODW_ID}-control-room-events-in-eventbus-arn}
+          pattern:
+            detail-type:
+              - On-Demand Worker Request

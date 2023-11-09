@@ -1,4 +1,4 @@
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { APIGatewayProxyEventV2, APIGatewayProxyResultV2, EventBridgeEvent } from 'aws-lambda';
 import { parseEnvVariable } from './utils';
 import { Command } from './api-constants';
 import {
@@ -149,4 +149,46 @@ export const handler = async (
   }
 
   return buildResponse(400, 'Unrecognized command');
+};
+
+export const eventBridgeHandler = async (
+  event: EventBridgeEvent<'On-Demand Worker Request', any>,
+) => {
+  /**
+   * The event is designed as safe to be logged. Any sensitive content
+   * is encrypted when the integration is configured in production mode.
+   */
+  console.log(`Handling on-demand worker request: ${JSON.stringify(event)}`);
+
+  const provisionerConfiguration = await getProvisionerConfiguration(
+    parseEnvVariable('WORKER_PROVIDER_CONFIGURATION_SECRET'),
+  );
+
+  const clusterCfg = await getClusterConfiguration(
+    provisionerConfiguration.clusterConfigParameterArn,
+  );
+
+  // TODO: implement decryption here.
+  // For now we rely on the plaintext payload present in development mode.
+
+  /**
+   * Dispatch the workload to our ECS cluster.
+   */
+  const ecsProvisioner = getEcsProvisioner(clusterCfg);
+  await ecsProvisioner.provisionWorker({
+    /**
+     * Pass information from the Control Room request.
+     */
+    linkToken: event.detail.payload.link_token,
+    workspaceId: event.detail.metadata.workspace_id,
+    workerId: event.detail.metadata.worker_id,
+
+    /**
+     * This controls which docker image gets started.
+     * This request could easily be augmented with e.g. amount of
+     * resources allocated for the task or other parameters passed
+     * to the task definition.
+     */
+    imageUri: `${provisionerConfiguration.ecrRepositoryUrl}:${parseEnvVariable('ECR_IMAGE_TAG')}`,
+  });
 };
