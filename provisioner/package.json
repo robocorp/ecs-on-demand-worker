@@ -16,8 +16,8 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.125",
-    "@types/node": "^20.8.10",
+    "@types/aws-lambda": "^8.10.126",
+    "@types/node": "^18.18.9",
     "esbuild": "^0.19.5",
     "prettier": "^3.0.3",
     "serverless": "^3.36.0",
@@ -25,10 +25,10 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@aws-sdk/client-ecs": "^3.441.0",
-    "@aws-sdk/client-secrets-manager": "^3.441.0",
-    "@aws-sdk/client-ssm": "^3.441.0",
-    "@aws-sdk/client-sts": "^3.441.0",
+    "@aws-sdk/client-ecs": "^3.445.0",
+    "@aws-sdk/client-secrets-manager": "^3.445.0",
+    "@aws-sdk/client-ssm": "^3.445.0",
+    "@aws-sdk/client-sts": "^3.445.0",
     "@aws-sdk/util-arn-parser": "^3.310.0",
     "zod": "^3.22.4"
   }
