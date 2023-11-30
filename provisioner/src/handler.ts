@@ -14,6 +14,7 @@ import {
   ValidationError,
   apiGwRequestEventSchema,
 } from './validation';
+import { decryptData } from './encryption';
 
 const buildResponse = (
   statusCode: number,
@@ -168,9 +169,30 @@ export const eventBridgeHandler = async (
     provisionerConfiguration.clusterConfigParameterArn,
   );
 
-  // TODO: implement decryption here.
-  // For now we rely on the plaintext payload present in development mode.
+  let linkToken;
+  try {
+    const key = Buffer.from(provisionerConfiguration.secret, 'utf8');
+    const ciphertext = Buffer.from(event.detail.encrypted_payload, 'base64');
+    const decryptedData = await decryptData(ciphertext, key);
+    const decryptedPayload = JSON.parse(decryptedData.toString('utf8'));
+    linkToken = decryptedPayload.link_token;
+    if (linkToken) {
+      console.log('Successfully decrypted link token from encrypted payload.');
+    }
+  } catch (e) {
+    console.log('Decryption failed', e);
+  }
 
+  if (!linkToken) {
+    if (event.detail.payload?.link_token) {
+      console.log(
+        'Failed to extract link token from decrypted payload, but plaintext link token exists in the message indicating development mode; proceeding with the plaintext token.',
+      );
+      linkToken = event.detail.payload?.link_token;
+    } else {
+      throw new Error('Cannot extract link token');
+    }
+  }
   /**
    * Dispatch the workload to our ECS cluster.
    */
@@ -179,7 +201,7 @@ export const eventBridgeHandler = async (
     /**
      * Pass information from the Control Room request.
      */
-    linkToken: event.detail.payload.link_token,
+    linkToken,
     workspaceId: event.detail.metadata.workspace_id,
     workerId: event.detail.metadata.worker_id,
 
