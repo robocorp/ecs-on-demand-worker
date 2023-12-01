@@ -9,11 +9,11 @@ import crypto from 'node:crypto';
 
 const client = buildClient(CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT);
 
+/**
+ * For AES-256, the key must be exactly 32 bytes.
+ * Derive a suitable length key by hashing it with SHA256.
+ */
 const prepareKey = (key: Buffer): Uint8Array => {
-  if (key.byteLength === 32) {
-    return new Uint8Array(key);
-  }
-
   const hash = crypto.createHash('sha256');
   hash.update(key);
   const derivedKey = hash.digest();
