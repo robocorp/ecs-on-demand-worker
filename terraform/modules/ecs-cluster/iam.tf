@@ -27,12 +27,21 @@ resource "aws_iam_role" "ecs_instance_role" {
       },
     ]
   })
+}
 
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
-    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-    "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-  ]
+resource "aws_iam_role_policy_attachment" "ecs_instance_role_ecs_policy" {
+  role       = aws_iam_role.ecs_instance_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_role_ssm_policy" {
+  role       = aws_iam_role.ecs_instance_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_role_cloudwatch_policy" {
+  role       = aws_iam_role.ecs_instance_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 /**
@@ -73,25 +82,29 @@ resource "aws_iam_role" "ecs_task_execution_role" {
       },
     ]
   })
+}
 
-  inline_policy {
-    name = "create-log-groups-policy"
+data "aws_iam_policy_document" "ecs_task_execution_role_ecs_inline_policy" {
+  version = "2012-10-17"
 
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow",
-          Action = [
-            "logs:CreateLogGroup"
-          ]
-          Resource = "*"
-        }
-      ]
-    })
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup"
+    ]
+    resources = ["*"]
   }
+}
 
-  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+resource "aws_iam_role_policy" "ecs_task_execution_role_ecs_inline_policy" {
+  name   = "create-log-groups-policy"
+  role   = aws_iam_role.ecs_task_execution_role.id
+  policy = data.aws_iam_policy_document.ecs_task_execution_role_ecs_inline_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ecs_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 /**
@@ -116,52 +129,53 @@ resource "aws_iam_role" "worker_provisioner_role" {
       },
     ]
   })
+}
 
-  inline_policy {
-    name = "ecs-policy"
+data "aws_iam_policy_document" "worker_provisioner_ecs_policy" {
+  version = "2012-10-17"
 
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow",
-          Action = [
-            "ecs:RunTask",
-            "ecs:StartTask",
-            "ecs:DescribeClusters",
-            "ecs:ListTasks",
-            "ecs:RegisterTaskDefinition",
-            "ecs:DeregisterTaskDefinition",
-            "ecs:DescribeTaskDefinition",
-            "ecs:ListContainerInstances",
-            "ecs:StopTask",
-            "ecs:DescribeTasks"
-          ]
-          Resource = "*"
-        }
-      ]
-    })
-  }
-
-  inline_policy {
-    name = "iam-policy"
-
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow",
-          Action = [
-            "iam:GetRole",
-            "iam:PassRole"
-          ]
-          Resource = [
-            aws_iam_role.ecs_task_execution_role.arn,
-            aws_iam_role.ecs_robot_task_role.arn,
-          ]
-        }
-      ]
-    })
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecs:RunTask",
+      "ecs:StartTask",
+      "ecs:DescribeClusters",
+      "ecs:ListTasks",
+      "ecs:RegisterTaskDefinition",
+      "ecs:DeregisterTaskDefinition",
+      "ecs:DescribeTaskDefinition",
+      "ecs:ListContainerInstances",
+      "ecs:StopTask",
+      "ecs:DescribeTasks",
+    ]
+    resources = ["*"]
   }
 }
 
+resource "aws_iam_role_policy" "worker_provisioner_ecs_policy" {
+  name   = "ecs-policy"
+  role   = aws_iam_role.worker_provisioner_role.id
+  policy = data.aws_iam_policy_document.worker_provisioner_ecs_policy.json
+}
+
+data "aws_iam_policy_document" "worker_provisioner_iam_policy" {
+  version = "2012-10-17"
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "iam:GetRole",
+      "iam:PassRole",
+    ]
+    resources = [
+      aws_iam_role.ecs_task_execution_role.arn,
+      aws_iam_role.ecs_robot_task_role.arn,
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "worker_provisioner_iam_policy" {
+  name   = "iam-policy"
+  role   = aws_iam_role.worker_provisioner_role.id
+  policy = data.aws_iam_policy_document.worker_provisioner_iam_policy.json
+}
