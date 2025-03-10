@@ -49,8 +49,8 @@ Dockerfile contains an environment suitables for web automation.
     - `docker build --platform linux/amd64 .`
  1. Upload the image to an image repository. To use the default repository set up by
 Terraform above, run the following:
-    - `./upload.sh <sha_from_build_output> v2.0`, where `v2.0` is the image tag name.
-        - You can choose any tagging scheme, but the provisioner in this example uses image tag v2.0 by default.
+    - `./upload.sh <sha_from_build_output> v2.1`, where `v2.1` is the image tag name.
+        - You can choose any tagging scheme, but the provisioner in this example uses image tag v2.1 by default.
 
 ### Provisioner
 
