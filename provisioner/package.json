@@ -1,6 +1,6 @@
 {
   "name": "rc-ecs-ondemand-worker-provisioner",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "build": "tsc",
     "deploy": "npx sls deploy",
@@ -16,21 +16,21 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.130",
-    "@types/node": "^18.19.0",
-    "esbuild": "^0.19.8",
-    "prettier": "^3.1.0",
-    "serverless": "^3.38.0",
-    "serverless-esbuild": "^1.49.0",
-    "typescript": "^5.3.2"
+    "@types/aws-lambda": "^8.10.147",
+    "@types/node": "^22.13.10",
+    "esbuild": "^0.25.1",
+    "osls": "^3.49.0",
+    "prettier": "^3.5.3",
+    "serverless-esbuild": "^1.55.0",
+    "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@aws-crypto/client-node": "^4.0.0",
-    "@aws-sdk/client-ecs": "^3.462.0",
-    "@aws-sdk/client-secrets-manager": "^3.462.0",
-    "@aws-sdk/client-ssm": "^3.462.0",
-    "@aws-sdk/client-sts": "^3.462.0",
-    "@aws-sdk/util-arn-parser": "^3.310.0",
-    "zod": "^3.22.4"
+    "@aws-crypto/client-node": "^4.2.0",
+    "@aws-sdk/client-ecs": "^3.758.0",
+    "@aws-sdk/client-secrets-manager": "^3.758.0",
+    "@aws-sdk/client-ssm": "^3.759.0",
+    "@aws-sdk/client-sts": "^3.758.0",
+    "@aws-sdk/util-arn-parser": "^3.723.0",
+    "zod": "^3.24.2"
   }
 }

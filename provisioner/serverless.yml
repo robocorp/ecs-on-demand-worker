@@ -11,7 +11,7 @@ custom:
   esbuild:
     concurrency: 1
     exclude:
-      - '@aws-sdk/*' # lambda nodejs18.x includes aws-sdk v3
+      - '@aws-sdk/*' # lambda runtime nodejs18.x and newer includes aws-sdk v3
 
 provider:
   name: aws
@@ -19,7 +19,7 @@ provider:
   # default region
   region: us-east-1
   deploymentMethod: direct
-  runtime: nodejs18.x
+  runtime: nodejs22.x
   timeout: 20
   logRetentionInDays: 30
   versionFunctions: false
