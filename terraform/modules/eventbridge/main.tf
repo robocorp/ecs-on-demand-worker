@@ -25,9 +25,9 @@ data "aws_iam_policy_document" "bus_policy" {
     }
     condition {
       // https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-use-conditions.html
-      test = "ForAnyValue:StringLike"
+      test     = "ForAnyValue:StringLike"
       variable = "aws:SourceArn"
-      values = var.eventbridge_external_in_allowed_source_rule_arns
+      values   = var.eventbridge_external_in_allowed_source_rule_arns
     }
   }
 }

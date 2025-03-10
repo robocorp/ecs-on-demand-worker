@@ -1,4 +1,4 @@
-data aws_caller_identity current {
+data "aws_caller_identity" "current" {
 }
 
 /**
@@ -40,8 +40,8 @@ resource "aws_iam_role" "ecs_instance_role" {
  * is the effective role during the robot run.
  */
 resource "aws_iam_role" "ecs_robot_task_role" {
-  name               = "${var.id}-robot-role"
-  path               = "/"
+  name = "${var.id}-robot-role"
+  path = "/"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -58,8 +58,8 @@ resource "aws_iam_role" "ecs_robot_task_role" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${var.id}-ecs-task-execution-role"
-  path               = "/"
+  name = "${var.id}-ecs-task-execution-role"
+  path = "/"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -78,11 +78,11 @@ resource "aws_iam_role" "ecs_task_execution_role" {
     name = "create-log-groups-policy"
 
     policy = jsonencode({
-      Version   = "2012-10-17"
+      Version = "2012-10-17"
       Statement = [
         {
           Effect = "Allow",
-          Action =  [
+          Action = [
             "logs:CreateLogGroup"
           ]
           Resource = "*"
@@ -91,7 +91,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
     })
   }
 
-  managed_policy_arns = [ "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy" ]
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
 /**
@@ -99,8 +99,8 @@ resource "aws_iam_role" "ecs_task_execution_role" {
  * for launching containers.
  */
 resource "aws_iam_role" "worker_provisioner_role" {
-  name               = "${var.id}-provisioner-role"
-  path               = "/"
+  name = "${var.id}-provisioner-role"
+  path = "/"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -121,11 +121,11 @@ resource "aws_iam_role" "worker_provisioner_role" {
     name = "ecs-policy"
 
     policy = jsonencode({
-      Version   = "2012-10-17"
+      Version = "2012-10-17"
       Statement = [
         {
           Effect = "Allow",
-          Action =  [
+          Action = [
             "ecs:RunTask",
             "ecs:StartTask",
             "ecs:DescribeClusters",
@@ -147,11 +147,11 @@ resource "aws_iam_role" "worker_provisioner_role" {
     name = "iam-policy"
 
     policy = jsonencode({
-      Version   = "2012-10-17"
+      Version = "2012-10-17"
       Statement = [
         {
           Effect = "Allow",
-          Action =  [
+          Action = [
             "iam:GetRole",
             "iam:PassRole"
           ]

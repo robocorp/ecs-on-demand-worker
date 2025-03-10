@@ -7,9 +7,9 @@ locals {
 }
 
 resource "aws_vpc" "vpc" {
-  cidr_block = "172.17.0.0/16"
+  cidr_block                       = "172.17.0.0/16"
   assign_generated_ipv6_cidr_block = false
-  enable_dns_hostnames = false
+  enable_dns_hostnames             = false
 
   tags = {
     Name = var.id
@@ -32,7 +32,7 @@ resource "aws_subnet" "private_subnets" {
   availability_zone               = data.aws_availability_zones.azs.names[count.index]
 
   tags = {
-    Name   = "${var.id}-private-${data.aws_availability_zones.azs.names[count.index]}"
+    Name = "${var.id}-private-${data.aws_availability_zones.azs.names[count.index]}"
   }
 }
 
