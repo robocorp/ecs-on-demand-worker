@@ -1,5 +1,8 @@
 FROM debian:bookworm
 
+# Specify Sema4 (Robocorp) worker version
+ENV WORKER_VERSION=7.9.3
+
 # Set all variables that affect programs to follow same encoding
 ENV LANG=C.UTF-8 LANGUAGE=C.UTF-8 LC_ALL=C.UTF-8
 
@@ -48,7 +51,7 @@ COPY ./resources/rtconfig.yml instance/rtconfig.yml
 
 RUN curl --silent --show-error --fail -o \
     /home/worker/bin/robocorp-worker \
-    https://downloads.robocorp.com/workforce-agent-core/releases/latest/linux64/robocorp-workforce-agent-core
+    https://downloads.robocorp.com/workforce-agent-core/releases/${WORKER_VERSION}/linux64/robocorp-workforce-agent-core
 RUN chmod +x /home/worker/bin/robocorp-worker
 
 # Initialize the Worker agent
